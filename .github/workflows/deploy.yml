@@ -21,8 +21,8 @@ jobs:
       - name: Install packages
         run: npm install
 
-      - name: Install Serverless
-        run: npm install -g serverless
+      - name: Install Serverless Framework v3
+        run: npm install -g serverless@3
 
       - name: Deploy to AWS
         run: serverless deploy --stage prod
