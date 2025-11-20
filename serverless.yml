@@ -3,41 +3,27 @@ service: express-lambda-app
 provider:
   name: aws
   runtime: nodejs18.x
-  region: us-east-1
+  region: eu-central-1
   stage: ${opt:stage, 'dev'}
-  memorySize: 128
+  memorySize: 256
   timeout: 30
   environment:
     NODE_ENV: ${self:provider.stage}
-  
-  # IAM permissions (adjust as needed)
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - logs:CreateLogGroup
-        - logs:CreateLogStream
-        - logs:PutLogEvents
-      Resource: "arn:aws:logs:*:*:*"
 
 functions:
   api:
-    handler: handler.handler
+    handler: src/lambda.handler
     events:
-      - http:
-          path: /
-          method: ANY
-          cors: true
-      - http:
+      - httpApi:
           path: /{proxy+}
           method: ANY
-          cors: true
-
-# Optional: Add custom domain
-# custom:
-#   customDomain:
-#     domainName: api.yourdomain.com
-#     stage: ${self:provider.stage}
-#     createRoute53Record: true
+      - httpApi:
+          path: /
+          method: ANY
 
 plugins:
-  # - serverless-domain-manager  # Uncomment if using custom domain
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    httpPort: 3000

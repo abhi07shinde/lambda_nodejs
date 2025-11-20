@@ -1,19 +1,23 @@
 {
   "name": "express-lambda-app",
   "version": "1.0.0",
-  "description": "Express app deployed on AWS Lambda",
-  "main": "handler.js",
+  "description": "Express application deployed to AWS Lambda",
+  "main": "src/lambda.js",
   "scripts": {
-    "start": "node local-server.js",
-    "dev": "nodemon local-server.js",
+    "start": "node src/app.js",
+    "dev": "serverless offline start",
     "deploy": "serverless deploy",
-    "remove": "serverless remove"
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "dependencies": {
     "express": "^4.18.2",
     "serverless-http": "^3.2.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
-  }
+    "serverless": "^3.38.0",
+    "serverless-offline": "^13.3.0"
+  },
+  "keywords": ["express", "lambda", "serverless", "aws"],
+  "author": "Your Name",
+  "license": "MIT"
 }
