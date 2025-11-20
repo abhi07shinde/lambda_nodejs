@@ -5,21 +5,40 @@ provider:
   runtime: nodejs18.x
   region: eu-central-1
   stage: ${opt:stage, 'dev'}
-  memorySize: 256
-  timeout: 30
+  memorySize: 512  # Increased for better performance
+  timeout: 900     # 15 minutes (max for Lambda)
   environment:
     NODE_ENV: ${self:provider.stage}
 
 functions:
   api:
     handler: src/lambda.handler
-    events:
-      - httpApi:
-          path: /{proxy+}
-          method: ANY
-      - httpApi:
-          path: /
-          method: ANY
+    url:
+      cors:
+        allowCredentials: false
+        allowHeaders:
+          - Content-Type
+          - X-Amz-Date
+          - Authorization
+          - X-Api-Key
+          - X-Amz-Security-Token
+          - X-Amz-User-Agent
+          - X-Requested-With
+        allowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - PATCH
+          - OPTIONS
+        allowOrigins:
+          - '*'
+        exposeHeaders:
+          - Date
+          - X-Amz-Request-Id
+        maxAge: 86400
+    environment:
+      FUNCTION_URL: true
 
 plugins:
   - serverless-offline
@@ -27,3 +46,4 @@ plugins:
 custom:
   serverless-offline:
     httpPort: 3000
+    host: 0.0.0.0
